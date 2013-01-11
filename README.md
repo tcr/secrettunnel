@@ -1,6 +1,6 @@
 # <img src="http://game-icons.net/icons/lorc/originals/png/magic-portal.png" width="32"> secrettunnel, secret portals from localhost to www
 
-`secrettunnel` generates a random domain name for your project and stores it in `.secrettunnel`. Every time you run `secrettunnel`, the same secret URL is opened.
+`secrettunnel` generates a random domain name for your project and stores it in `.secrettunnel`. Every time you run `secrettunnel` from that directory, the same secret URL is opened.
 
 Use it from the command line:
 
