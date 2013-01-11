@@ -30,7 +30,7 @@ Install [localtunnel](https://github.com/progrium/localtunnel):
 
 Then:
 
-    npm install smee
+    npm install -g secrettunnel
 
 ## License & Credits
 
