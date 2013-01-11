@@ -2,62 +2,22 @@ var spawn = require('child_process').spawn
   , util = require('util')
   , EventEmitter = require('events').EventEmitter;
 
-var express = require('express')
-  , nconf = require('nconf');
+var nconf = require('nconf')
+  , uuid = require('node-uuid');
 
-nconf.file('.smeeconf');
+nconf.file('.secrettunnel');
 
-util.inherits(Hook, EventEmitter);
+module.exports = function (port, callback) {
+  callback = callback || function () { };
 
-function Hook () {
-}
-
-exports.hook = function (opts, callback) {
-  if (!callback) callback = opts, opts = {};
-
-  return function (req, res, next) {
-    if (req.method != 'POST') {
-      return next();
-    }
-    var data = '';
-    req.setEncoding('utf8');
-    req.on('data', function(chunk) { 
-      data += chunk;
-    });
-    req.on('end', function() {
-      callback(opts.json ? JSON.parse(data) : req.body, req);
-      res.send('');
-    });
-
-    // Parse form or JSON body.
-    express.bodyParser()(req, res, function () { });
-  };
-};
-
-exports.persistentHook = function (opts, callback) {
-  if (!callback) callback = opts, opts = {};
-
-  var hook = new Hook();
-  var name = 'smee' + String(Math.random()).substr(2);
-  var port = (opts.PORT || 9009);
+  var name = uuid.v1();
 
   if (!nconf.get('tunnel')) {
     nconf.set('tunnel', name);
-    nconf.save(startServer);
+    nconf.save(startTunnel);
   } else {
     name = nconf.get('tunnel');
-    startServer();
-  }
-
-  function startServer () {
-    var app = express();
-
-    app.use('/', exports.hook(opts, hook.emit.bind(hook, 'callback')));
-
-    app.listen(port, function () {
-      hook.local = 'http://localhost:' + port;
-      startTunnel();
-    });
+    startTunnel();
   }
 
   function clone (arg) {
@@ -79,8 +39,8 @@ exports.persistentHook = function (opts, callback) {
       data = String(data);
       var look = 'is now accessible from ';
       if (data.indexOf(look) > -1) {
-        hook.url = data.substr(data.indexOf(look) + look.length).replace(/^\s+|\s+$/g, '');
-        callback(null, hook);
+        var url = data.substr(data.indexOf(look) + look.length).replace(/^\s+|\s+$/g, '');
+        callback(null, url);
       } else {
         callback(data, null);
       }

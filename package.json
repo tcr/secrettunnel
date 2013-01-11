@@ -1,11 +1,15 @@
 {
-  "name": "smee",
-  "version": "0.2.0",
+  "name": "secrettunnel",
+  "version": "0.1.0",
   "main": "index.js",
-  "repository": "https://github.com/tcr/smee",
+  "repository": "https://github.com/tcr/secrettunnel",
   "author": "Tim Cameron Ryan",
   "license": "MIT",
+  "bin": {
+    "secrettunnel": "cli.js"
+  },
   "dependencies": {
-    "nconf": "~0.6.7"
+    "nconf": "~0.6.7",
+    "node-uuid": "~1.4.0"
   }
 }

@@ -1,37 +1,26 @@
-# <img src="http://game-icons.net/icons/lorc/originals/png/fishing-hook.png" width="32"> smee, persistent local webhooks
+# <img src="http://game-icons.net/icons/lorc/originals/png/magic-portal.png" width="32"> secrettunnel, secret portals from localhost to www
 
-Create a webhook locally which persists between script runs, with no configuration required.
+`secrettunnel` generates a random domain name for your project and stores it in `.secrettunnel`. Every time you run `secrettunnel`, the same secret URL is opened.
+
+Use it from the command line:
+
+```
+$ secrettunnel 5000
+http://a8be4200-5bb7-11e2-b58e-9764e4662e6c.v2.localtunnel.com
+```
+
+Or from Node.js:
 
 ```javascript
-var smee = require('smee');
-smee.persistentHook(function (err, hook) {
-  console.log('Your webhook URL:', hook.url); // this URL is the same each time the script is run
-  hook.on('callback', function (json) {
-    console.log('Received webhook:', json);
-  });
+var express = require('express');
+var app = express();
+app.listen(5000);
+
+var secrettunnel = require('secrettunnel');
+secrettunnel(5000, function (err, url) {
+  console.log('Public URL:', hook.url);
 });
 ```
-
-Hook configuration is stored in a local `.smeeconf` file in your script directory and is different between scripts.
-
-To use as middleware in a permanent server, just move to `smee.hook`:
-
-```javascript
-var app = express();
-app.use('/webhook/', smee.hook(function (json) {
-  console.log('Received webhook:', json);
-})
-```
-
-## Options
-
-If your webhook call is being sent incorrectly from the server (as form or text data), set `json: true` in the options:
-
-```javascript
-smee.persistentHook({json: true}, function (err, hook) { ... })
-```
-
-The default port is `9009`. If this is conflicting, change it by setting `port: ...` in the options.
 
 ## Installation
 
@@ -47,4 +36,4 @@ Then:
 
 Smee is MIT licensed.
 
-And if you're feeling good today, [donate to localtunnel](http://j.mp/donate-localtunnel) for being such an awesome project.
+If you're feeling good today, [donate to localtunnel](http://j.mp/donate-localtunnel) for being such an awesome project.
