@@ -8,7 +8,10 @@ var nconf = require('nconf')
 nconf.file('.secrettunnel');
 
 module.exports = function (port, callback) {
+  if (typeof port == 'function') callback = port, port = null;
   callback = callback || function () { };
+  port = port || nconf.get('port') || 5000;
+  nconf.set('port', port);
 
   var name = uuid.v1();
 
@@ -39,8 +42,8 @@ module.exports = function (port, callback) {
       data = String(data);
       var look = 'is now accessible from ';
       if (data.indexOf(look) > -1) {
-        var url = data.substr(data.indexOf(look) + look.length).replace(/^\s+|\s+$/g, '');
-        callback(null, url);
+        var url = data.substr(data.indexOf(look) + look.length).replace(/^\s+| ...\s+$/g, '');
+        callback(null, url, name, port);
       } else {
         callback(data, null);
       }
